@@ -235,3 +235,114 @@ body.hide-header .header {
     margin-top: 1rem;
 }
 
+.chats{
+    padding: 2rem 1rem 10rem;
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-color: #999 transparent;
+}
+
+.chats .message--incoming{
+    margin-top: 1.5rem;
+}
+
+.chats .message--outgoing:not(:first-child){
+    margin-top: 40px;
+}
+
+.chats .message__content{
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+    align-items: flex-start;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.chats .message__text{
+    color: var(--text-color);
+    white-space: pre-wrap;
+    margin-top: 10px;
+}
+
+.hide{
+    display: none !important;
+}
+
+.chats .message--error .message__text{
+    color: #e55865;
+}
+
+.chats .message--loading .message__text{
+    display: none;
+}
+
+.chats .message__avatar{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    object-fit: top center;
+}
+
+.chats .message--loading .message__avatar{
+    animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+
+    100%{
+        transform: roate(360deg);
+    }
+}
+
+.chats .message__icon{
+    color: var(--text-color);
+    cursor: pointer;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    font-size: 1.25rem;
+    margin-left: 3.5rem;
+    transition: background 0.3s ease;
+}
+
+.chats .message__icon:hover{ 
+    background: var(--secondary-hover-color);
+}
+
+.chats .message__loading-indicator{
+    display: none;
+    gap: 0.6rem;
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.chats .message--loading .message__loading-indicator{
+    display: flex;
+}
+
+.chats .message__loading-indicator .message__loading-bar:first-child{
+    width: 85%;
+}
+
+.chats .message__loading-indicator .message__loading-bar:last-child{
+    width: 70%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: -800px 0;
+    }
+    50%{
+        background-position: 0px 0;
+    }
+    100%{
+        background-position: 800px 0;
+    }
+}

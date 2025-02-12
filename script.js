@@ -16,7 +16,7 @@ const API_REQUEST_URL = `https://generativelanguage.googleapis.com/v1beta/models
 const loadSavedChatHistory = () => {
     const savedConversations = JSON.parse(localStorage.getItem
         ("saved-api-chats")) || [];
-    const isLightTheme = localStorage.getItem("theme-color") === "light_mode";
+    const isLightTheme = localStorage.getItem("themeColor") === "light_mode";
 
     document.body.classList.toggle("light_mode", isLightTheme);
     themeToggleButton.innerHTML = isLightTheme ? '<i class="bx bx-moon"></i>' : '<i class="bx bx-sun"></i>';
@@ -77,7 +77,7 @@ const loadSavedChatHistory = () => {
 
 //create a new chat message element
 
-const createChatMessageElement = a(htmlContent, ...cssClasses) =>{
+const createChatMessageElement = (htmlContent, ...cssClasses) =>{
     const messageElement = document.createElement("div"); 
     messageElement.classList.add("message", ...cssClasses);
     messageElement.innerHTML = htmlContent;
@@ -118,7 +118,7 @@ const showTypingEffect = (rawText, htmlText, messageElement, incomingMessageElem
 
 //fetch api response based on user input
 const requestApiResponse = async(incomingMessageElement) =>{
-    const messageElement = incomingMessageElement.querySelector(".message__text");
+    const messageTextElement = incomingMessageElement.querySelector(".message__text");
 
     try{
         const response = await fetch(API_REQUEST_URL, {
@@ -132,7 +132,7 @@ const requestApiResponse = async(incomingMessageElement) =>{
         const responseData = await response.json();
         if (!response.ok) throw new Error(responseData.error.message);
 
-        const responseText = responseData?.conditates?.[0]?.content?.parts?.[0]?.text;
+        const responseText = responseData?.candidates?.[0]?.content?.parts?.[0]?.text;
         if (!responseText) throw new Error("Invalid API response.");
 
         const parsedApiResponse = marked.parse(responseText);
@@ -146,7 +146,7 @@ const requestApiResponse = async(incomingMessageElement) =>{
             userMessage: currentUserMessage,
             apiResponse: responseData
         });
-        localStorage.setItem("saved-api-chats", JSON.stringif(savedConversations));
+        localStorage.setItem("saved-api-chats", JSON.stringify(savedConversations));
     } catch (error) {
          isGeneratingResponse = false;
          messageTextElement.innerText = error.message;
@@ -193,7 +193,7 @@ const displayLoadingAnimation = () =>{
     const loadingHTML = `
     
     <div class= "message__content">
-        <img class="message__avatar" src="assets/gemini.svg"
+        <img class="message__avatar" src="assets/gemini_logo.png"
         alt="Gemini avatar">
         <p class="message__text"></p>
         <div class="message__loading-indicator">
@@ -242,7 +242,7 @@ const handleOutgoingMessage = () =>{
     `;
 
     const outgoingMessageElement = createChatMessageElement(outgoingMessageHTML, "message--outgoing");
-    outgoingMessageElement.querySelector(".message--text").innerText = currentUserMessage; 
+    outgoingMessageElement.querySelector(".message__text").innerText = currentUserMessage; 
     chatHistoryContainter.appendChild(outgoingMessageElement);
 
     messageForm.reset(); //clear input field
@@ -261,4 +261,32 @@ themeToggleButton.addEventListener('click', () =>{
 });
 
 //clear all chat history
-clearChatButton.
+clearChatButton.addEventListener('click', () =>{
+    if (confirm("Are you sure you want to delete all chat history?")){
+        localStorage.removeItem("saved-api-chats");
+
+        //reload chat history to reflect changes
+        loadSavedChatHistory();
+
+
+        currentUserMessage = null;
+        isGeneratingResponse = false;
+    }
+});
+
+//handle click on suggestion items
+suggestionItems.forEach(suggestion =>{
+    suggestion.addEventListener('click', () =>{
+        currentUserMessage = suggestion.querySelector(".suggests__item-text").innerText;
+        handleOutgoingMessage();
+    });
+});
+
+//prevent default from submission and handle outgoing message
+messageForm.addEventListener('submit', (e) =>{
+    e.preventDefault();
+    handleOutgoingMessage();
+});
+
+//load saved chat history on page load
+loadSavedChatHistory();
