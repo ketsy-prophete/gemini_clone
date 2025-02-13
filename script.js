@@ -27,10 +27,10 @@ const loadSavedChatHistory = () => {
     savedConversations.forEach(conversation => {
         //Display the user's message
         const userMessageHtml = `
+
                 <div class="message__content">
-                <img class="message__avatar" src="assets/profile.png"
-                alt="User avatar">
-                <p class="message__text">${conversation.userMessage}</p>
+                    <img class="message__avatar" src="assets/profile.png" alt="User avatar">
+                    <p class="message__text">${conversation.userMessage}</p>
                 </div>     
 
             `;
@@ -47,8 +47,7 @@ const loadSavedChatHistory = () => {
         const responseHtml = `
             
             <div class="message__content">
-                <img class="message__avatar" src"assets/gemini.svg"
-                alt="Gemini avatar">
+                <img class="message__avatar" src"assets/gemini.svg" alt="Gemini avatar">
                 <p class="message__text"></p>
                 <div class="message__loading-indicator hide">
                     <div class="message__loading-bar"></div>
@@ -56,8 +55,7 @@ const loadSavedChatHistory = () => {
                     <div class="message__loading-bar"></div>
                 </div>
             </div>
-            <span onClick="copyMessageToClipboard(this)"
-            class="message__icon hide"><i class='bx bx-copy-alt'></i></span>
+            <span onClick="copyMessageToClipboard(this)" class="message__icon hide"><i class='bx bx-copy-alt'></i></span>
             
 
             `;
@@ -87,7 +85,7 @@ const createChatMessageElement = (htmlContent, ...cssClasses) =>{
 //show typing effect
 const showTypingEffect = (rawText, htmlText, messageElement, incomingMessageElement, skipEffect = false) =>{
     const copyIconElement = incomingMessageElement.querySelector(".message__icon");
-    copyIconElement.classList.add("hide"); //initially hid copy button
+    copyIconElement.classList.add("hide"); //initially hide copy button
 
     if(skipEffect){
         //display content directly without typing
@@ -104,7 +102,7 @@ const showTypingEffect = (rawText, htmlText, messageElement, incomingMessageElem
 
     const typingInterval = setInterval(() =>{
         messageElement.innerText += (wordIndex === 0 ? '' : ' ') +
-        wordsArra[wordIndex++];
+        wordsArray[wordIndex++];
         if(wordIndex === wordsArray.length){
             clearInterval(typingInterval);
             isGeneratingResponse = false;
